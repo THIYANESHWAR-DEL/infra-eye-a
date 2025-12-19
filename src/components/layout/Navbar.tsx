@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Menu, X, BarChart3, BookMarked, FileBarChart, Boxes, Sun, Moon, Languages } from "lucide-react";
+import { ShieldCheck, Menu, X, BarChart3, BookMarked, FileBarChart, Boxes, Sun, Moon, Languages, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -17,6 +17,7 @@ export const Navbar = () => {
     { href: "/modules", label: t("modules"), icon: Boxes },
     { href: "/awareness", label: t("learn"), icon: BookMarked },
     { href: "/reports", label: t("reports"), icon: FileBarChart },
+    { href: "/settings", label: language === "ta" ? "அமைப்புகள்" : "Settings", icon: Settings },
   ];
 
   return (
