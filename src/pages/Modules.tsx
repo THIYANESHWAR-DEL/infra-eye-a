@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { 
   Shield, 
@@ -9,13 +9,11 @@ import {
   Network, 
   AlertTriangle,
   ChevronRight,
-  Scan,
-  Upload,
-  CheckCircle,
-  XCircle,
-  Loader2
+  Scan
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ScamCallScanner } from "@/components/modules/ScamCallScanner";
+import { AIScanner } from "@/components/modules/AIScanner";
 
 const modules = [
   {
@@ -25,6 +23,7 @@ const modules = [
     description: "Analyze app permissions and detect risky behaviors",
     color: "from-blue-500 to-cyan-500",
     features: ["Permission Analysis", "Risk Scoring", "Malware Detection", "Privacy Report"],
+    placeholder: "Paste app permissions list, describe app behavior, or provide app details to analyze...",
   },
   {
     id: "scam-detector",
@@ -32,7 +31,8 @@ const modules = [
     title: "Scam Call & Phishing Detector",
     description: "Identify fraudulent calls and phishing attempts",
     color: "from-purple-500 to-pink-500",
-    features: ["Call Analysis", "SMS Screening", "Email Scanning", "URL Verification"],
+    features: ["Voice Analysis", "SMS Screening", "Email Scanning", "URL Verification"],
+    placeholder: "",
   },
   {
     id: "deepfake",
@@ -41,6 +41,7 @@ const modules = [
     description: "Spot AI-generated fake profiles and media",
     color: "from-orange-500 to-red-500",
     features: ["Image Analysis", "Video Verification", "Profile Authentication", "AI Detection"],
+    placeholder: "Describe the profile or content you want to verify. Include details like username, bio, posting patterns, or image descriptions...",
   },
   {
     id: "network",
@@ -49,6 +50,7 @@ const modules = [
     description: "Visualize suspicious network activities",
     color: "from-green-500 to-emerald-500",
     features: ["Traffic Analysis", "Anomaly Detection", "IPDR Visualization", "Threat Mapping"],
+    placeholder: "Paste network logs, IP addresses, traffic patterns, or describe suspicious network activity...",
   },
   {
     id: "dark-web",
@@ -57,47 +59,22 @@ const modules = [
     description: "Educational visualization of dark web threats",
     color: "from-slate-500 to-gray-700",
     features: ["Threat Education", "Data Breach Alerts", "Identity Monitoring", "Safety Tips"],
+    placeholder: "Ask about dark web threats, data breaches, or cybersecurity topics you want to learn about...",
   },
 ];
 
-type ScanState = "idle" | "scanning" | "complete";
-
-interface ScanResult {
-  status: "safe" | "warning" | "danger";
-  score: number;
-  issues: string[];
-  explanation: string;
-}
-
 const Modules = () => {
   const [activeModule, setActiveModule] = useState<string | null>(null);
-  const [scanState, setScanState] = useState<ScanState>("idle");
-  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
 
-  const handleScan = async (moduleId: string) => {
+  const handleScan = (moduleId: string) => {
     setActiveModule(moduleId);
-    setScanState("scanning");
-    setScanResult(null);
-
-    // Simulate AI scanning
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Mock result
-    const mockResults: ScanResult[] = [
-      { status: "safe", score: 92, issues: [], explanation: "No threats detected. Your system appears secure." },
-      { status: "warning", score: 65, issues: ["Suspicious permission request", "Outdated security certificate"], explanation: "Some potential risks identified. Review the flagged items." },
-      { status: "danger", score: 23, issues: ["Malware signature detected", "Data leak vulnerability", "Unauthorized access attempt"], explanation: "Critical threats found! Immediate action recommended." },
-    ];
-    
-    setScanResult(mockResults[Math.floor(Math.random() * mockResults.length)]);
-    setScanState("complete");
   };
 
   const resetScan = () => {
-    setScanState("idle");
-    setScanResult(null);
     setActiveModule(null);
   };
+
+  const activeModuleData = modules.find(m => m.id === activeModule);
 
   return (
     <>
@@ -119,7 +96,7 @@ const Modules = () => {
                 Security <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Modules</span>
               </h1>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Choose a module to scan and analyze different aspects of your digital security
+                Choose a module to scan and analyze different aspects of your digital security with real AI
               </p>
             </motion.div>
 
@@ -164,7 +141,7 @@ const Modules = () => {
                       onClick={() => handleScan(module.id)}
                     >
                       <Scan className="w-4 h-4" />
-                      Start Scan
+                      Start AI Scan
                       <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   </div>
@@ -172,116 +149,22 @@ const Modules = () => {
               ))}
             </div>
 
-            {/* Scan Modal/Overlay */}
-            <AnimatePresence>
-              {activeModule && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
-                  onClick={scanState === "complete" ? resetScan : undefined}
-                >
-                  <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
-                    className="relative max-w-md w-full p-8 rounded-2xl bg-card border border-border shadow-2xl"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    {scanState === "scanning" && (
-                      <div className="text-center">
-                        <div className="relative w-32 h-32 mx-auto mb-6">
-                          {/* Scanning Animation */}
-                          <motion.div
-                            className="absolute inset-0 rounded-full border-4 border-primary/30"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                          />
-                          <motion.div
-                            className="absolute inset-2 rounded-full border-4 border-t-primary border-transparent"
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <Loader2 className="w-12 h-12 text-primary animate-spin" />
-                          </div>
-                          {/* Scan Line */}
-                          <motion.div
-                            className="absolute inset-x-4 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent"
-                            animate={{ top: ["10%", "90%", "10%"] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          />
-                        </div>
-                        <h3 className="font-display text-xl font-semibold mb-2">AI Scanning...</h3>
-                        <p className="text-muted-foreground">Analyzing for potential threats</p>
-                      </div>
-                    )}
+            {/* Scam Call Scanner (with voice) */}
+            {activeModule === "scam-detector" && (
+              <ScamCallScanner onClose={resetScan} />
+            )}
 
-                    {scanState === "complete" && scanResult && (
-                      <div className="text-center">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: "spring" }}
-                          className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${
-                            scanResult.status === "safe" ? "bg-success/20" :
-                            scanResult.status === "warning" ? "bg-warning/20" :
-                            "bg-destructive/20"
-                          }`}
-                        >
-                          {scanResult.status === "safe" ? (
-                            <CheckCircle className="w-10 h-10 text-success" />
-                          ) : scanResult.status === "warning" ? (
-                            <AlertTriangle className="w-10 h-10 text-warning" />
-                          ) : (
-                            <XCircle className="w-10 h-10 text-destructive" />
-                          )}
-                        </motion.div>
-
-                        <h3 className="font-display text-xl font-semibold mb-2">
-                          {scanResult.status === "safe" ? "All Clear!" :
-                           scanResult.status === "warning" ? "Caution Advised" :
-                           "Threats Detected"}
-                        </h3>
-
-                        {/* Score */}
-                        <div className="mb-4">
-                          <span className="text-4xl font-bold font-display bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                            {scanResult.score}
-                          </span>
-                          <span className="text-muted-foreground">/100</span>
-                        </div>
-
-                        {/* Explanation */}
-                        <p className="text-sm text-muted-foreground mb-4 p-3 rounded-lg bg-muted/50">
-                          💡 <strong>Why this result:</strong> {scanResult.explanation}
-                        </p>
-
-                        {/* Issues */}
-                        {scanResult.issues.length > 0 && (
-                          <div className="text-left mb-6">
-                            <p className="text-sm font-medium mb-2">Issues Found:</p>
-                            <ul className="space-y-2">
-                              {scanResult.issues.map((issue, i) => (
-                                <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
-                                  {issue}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        <Button variant="cyber" onClick={resetScan} className="w-full">
-                          Close
-                        </Button>
-                      </div>
-                    )}
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Generic AI Scanner for other modules */}
+            {activeModule && activeModule !== "scam-detector" && activeModuleData && (
+              <AIScanner
+                moduleId={activeModuleData.id}
+                moduleTitle={activeModuleData.title}
+                moduleColor={activeModuleData.color}
+                icon={activeModuleData.icon}
+                placeholder={activeModuleData.placeholder}
+                onClose={resetScan}
+              />
+            )}
           </div>
         </main>
       </div>
