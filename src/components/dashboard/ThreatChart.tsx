@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const data = [
   { name: "Mon", threats: 4, blocked: 4, scans: 12 },
@@ -12,6 +13,8 @@ const data = [
 ];
 
 export const ThreatChart = () => {
+  const { t } = useLanguage();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,34 +24,24 @@ export const ThreatChart = () => {
     >
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="font-display font-semibold text-lg">Threat Activity</h3>
-          <p className="text-sm text-muted-foreground">Weekly overview of detected threats</p>
+          <h3 className="font-display font-semibold text-lg">{t("threatActivity")}</h3>
+          <p className="text-sm text-muted-foreground">{t("weeklyOverview")}</p>
         </div>
         <div className="flex gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-primary" />
-            <span className="text-muted-foreground">Detected</span>
+            <div className="w-3 h-3 rounded-full bg-destructive" />
+            <span className="text-muted-foreground">{t("detected")}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-success" />
-            <span className="text-muted-foreground">Blocked</span>
+            <div className="w-3 h-3 rounded-full bg-primary" />
+            <span className="text-muted-foreground">{t("blocked")}</span>
           </div>
         </div>
       </div>
 
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
-            <defs>
-              <linearGradient id="threatGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="blockedGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--success))" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="hsl(var(--success))" stopOpacity={0} />
-              </linearGradient>
-            </defs>
+          <BarChart data={data} barGap={4}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
             <XAxis 
               dataKey="name" 
@@ -70,21 +63,17 @@ export const ThreatChart = () => {
               }}
               labelStyle={{ color: 'hsl(var(--foreground))' }}
             />
-            <Area
-              type="monotone"
+            <Bar
               dataKey="threats"
-              stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              fill="url(#threatGradient)"
+              fill="hsl(var(--destructive))"
+              radius={[4, 4, 0, 0]}
             />
-            <Area
-              type="monotone"
+            <Bar
               dataKey="blocked"
-              stroke="hsl(var(--success))"
-              strokeWidth={2}
-              fill="url(#blockedGradient)"
+              fill="hsl(var(--primary))"
+              radius={[4, 4, 0, 0]}
             />
-          </AreaChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </motion.div>

@@ -1,19 +1,20 @@
 import { motion } from "framer-motion";
 import { 
-  AlertTriangle, 
+  AlertOctagon, 
   ShieldCheck, 
   ShieldAlert, 
-  Phone, 
-  Eye, 
-  Globe 
+  PhoneOff, 
+  ScanEye, 
+  Wifi 
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Alert {
   id: string;
   type: "warning" | "danger" | "safe";
-  category: string;
-  title: string;
-  description: string;
+  categoryKey: string;
+  titleKey: string;
+  descriptionKey: string;
   time: string;
   icon: React.ElementType;
 }
@@ -22,46 +23,46 @@ const alerts: Alert[] = [
   {
     id: "1",
     type: "danger",
-    category: "Phishing",
-    title: "Suspicious Email Detected",
-    description: "Blocked phishing attempt from unknown sender",
-    time: "2 min ago",
-    icon: AlertTriangle,
+    categoryKey: "phishing",
+    titleKey: "suspiciousEmail",
+    descriptionKey: "blockedPhishing",
+    time: "2",
+    icon: AlertOctagon,
   },
   {
     id: "2",
     type: "warning",
-    category: "App Security",
-    title: "High Risk Permission",
-    description: "New app requesting camera access",
-    time: "15 min ago",
-    icon: Eye,
+    categoryKey: "appSecurity",
+    titleKey: "highRiskPermission",
+    descriptionKey: "cameraAccess",
+    time: "15",
+    icon: ScanEye,
   },
   {
     id: "3",
     type: "safe",
-    category: "Scan Complete",
-    title: "Network Scan Passed",
-    description: "No anomalies detected in your network",
-    time: "1 hour ago",
-    icon: Globe,
+    categoryKey: "scanComplete",
+    titleKey: "networkScanPassed",
+    descriptionKey: "noAnomalies",
+    time: "60",
+    icon: Wifi,
   },
   {
     id: "4",
     type: "warning",
-    category: "Scam Call",
-    title: "Potential Fraud Call",
-    description: "Flagged call from suspicious number",
-    time: "3 hours ago",
-    icon: Phone,
+    categoryKey: "scamCall",
+    titleKey: "potentialFraud",
+    descriptionKey: "flaggedCall",
+    time: "180",
+    icon: PhoneOff,
   },
   {
     id: "5",
     type: "safe",
-    category: "Deepfake",
-    title: "Profile Verified",
-    description: "Social media profile authenticated",
-    time: "5 hours ago",
+    categoryKey: "deepfake",
+    titleKey: "profileVerified",
+    descriptionKey: "profileAuthenticated",
+    time: "300",
     icon: ShieldCheck,
   },
 ];
@@ -88,6 +89,15 @@ const typeStyles = {
 };
 
 export const AlertsTimeline = () => {
+  const { t, language } = useLanguage();
+
+  const formatTime = (minutes: string) => {
+    const mins = parseInt(minutes);
+    if (mins < 60) return `${mins} ${t("minAgo")}`;
+    if (mins < 120) return `1 ${t("hourAgo")}`;
+    return `${Math.floor(mins / 60)} ${t("hoursAgo")}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -96,8 +106,8 @@ export const AlertsTimeline = () => {
       className="p-6 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl"
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-display font-semibold text-lg">Recent Alerts</h3>
-        <span className="text-sm text-muted-foreground">Last 24 hours</span>
+        <h3 className="font-display font-semibold text-lg">{t("recentAlerts")}</h3>
+        <span className="text-sm text-muted-foreground">{t("last24Hours")}</span>
       </div>
 
       <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
@@ -120,12 +130,12 @@ export const AlertsTimeline = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${styles.badge}`}>
-                      {alert.category}
+                      {t(alert.categoryKey)}
                     </span>
-                    <span className="text-xs text-muted-foreground">{alert.time}</span>
+                    <span className="text-xs text-muted-foreground">{formatTime(alert.time)}</span>
                   </div>
-                  <h4 className="font-medium text-sm">{alert.title}</h4>
-                  <p className="text-xs text-muted-foreground truncate">{alert.description}</p>
+                  <h4 className="font-medium text-sm">{t(alert.titleKey)}</h4>
+                  <p className="text-xs text-muted-foreground truncate">{t(alert.descriptionKey)}</p>
                 </div>
               </div>
             </motion.div>

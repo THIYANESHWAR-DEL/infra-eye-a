@@ -5,13 +5,23 @@ import { RiskScoreCard } from "@/components/dashboard/RiskScoreCard";
 import { AlertsTimeline } from "@/components/dashboard/AlertsTimeline";
 import { ThreatChart } from "@/components/dashboard/ThreatChart";
 import { QuickActions } from "@/components/dashboard/QuickActions";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Dashboard = () => {
+  const { t, language } = useLanguage();
+
+  const stats = [
+    { labelKey: "appsScanned", value: "47", change: `+12 ${t("thisWeek")}`, color: "from-teal-500 to-cyan-500" },
+    { labelKey: "callsAnalyzed", value: "128", change: `+34 ${t("thisWeek")}`, color: "from-purple-500 to-pink-500" },
+    { labelKey: "profilesChecked", value: "23", change: `+8 ${t("thisWeek")}`, color: "from-orange-500 to-red-500" },
+    { labelKey: "lessonsCompleted", value: "15", change: `3 ${t("remaining")}`, color: "from-green-500 to-emerald-500" },
+  ];
+
   return (
     <>
       <Helmet>
-        <title>Dashboard - CyberSuraksha AI</title>
-        <meta name="description" content="Monitor your cyber security status, view recent alerts, and track threat activity on your personalized dashboard." />
+        <title>{language === "ta" ? "டாஷ்போர்டு - சைபர்சுரக்ஷா AI" : "Dashboard - CyberSuraksha AI"}</title>
+        <meta name="description" content={language === "ta" ? "உங்கள் சைபர் பாதுகாப்பு நிலையை கண்காணிக்கவும்" : "Monitor your cyber security status"} />
       </Helmet>
       <div className="min-h-screen bg-background">
         <Navbar />
@@ -24,9 +34,9 @@ const Dashboard = () => {
               className="mb-8"
             >
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
-                Welcome back, <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">User</span> 👋
+                {t("welcomeBack")}, <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{t("user")}</span> 👋
               </h1>
-              <p className="text-muted-foreground">Here's an overview of your cyber security status</p>
+              <p className="text-muted-foreground">{t("overviewStatus")}</p>
             </motion.div>
 
             {/* Quick Actions */}
@@ -58,12 +68,7 @@ const Dashboard = () => {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="grid grid-cols-2 gap-4"
               >
-                {[
-                  { label: "Apps Scanned", value: "47", change: "+12 this week", color: "from-blue-500 to-cyan-500" },
-                  { label: "Calls Analyzed", value: "128", change: "+34 this week", color: "from-purple-500 to-pink-500" },
-                  { label: "Profiles Checked", value: "23", change: "+8 this week", color: "from-orange-500 to-red-500" },
-                  { label: "Lessons Completed", value: "15", change: "3 remaining", color: "from-green-500 to-emerald-500" },
-                ].map((stat, i) => (
+                {stats.map((stat, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -76,7 +81,7 @@ const Dashboard = () => {
                       <span className="text-white font-bold">{stat.value.charAt(0)}</span>
                     </div>
                     <div className="text-2xl font-bold font-display">{stat.value}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-sm text-muted-foreground">{t(stat.labelKey)}</div>
                     <div className="text-xs text-primary mt-1">{stat.change}</div>
                   </motion.div>
                 ))}
