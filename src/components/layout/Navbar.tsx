@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Menu, X, LayoutDashboard, BookOpen, FileText, Layers } from "lucide-react";
+import { ShieldCheck, Menu, X, BarChart3, BookMarked, FileBarChart, Boxes, Sun, Moon, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/modules", label: "Modules", icon: Layers },
-  { href: "/awareness", label: "Learn", icon: BookOpen },
-  { href: "/reports", label: "Reports", icon: FileText },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
+
+  const navLinks = [
+    { href: "/dashboard", label: t("dashboard"), icon: BarChart3 },
+    { href: "/modules", label: t("modules"), icon: Boxes },
+    { href: "/awareness", label: t("learn"), icon: BookMarked },
+    { href: "/reports", label: t("reports"), icon: FileBarChart },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border/50">
@@ -26,11 +30,11 @@ export const Navbar = () => {
               transition={{ duration: 0.5 }}
               className="relative"
             >
-              <Shield className="w-8 h-8 text-primary" />
+              <ShieldCheck className="w-8 h-8 text-primary" />
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full" />
             </motion.div>
             <span className="font-display font-bold text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              CyberSuraksha AI
+              {language === "ta" ? "சைபர்சுரக்ஷா AI" : "CyberSuraksha AI"}
             </span>
           </Link>
 
@@ -57,20 +61,62 @@ export const Navbar = () => {
             })}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Controls */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Language Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLanguage(language === "en" ? "ta" : "en")}
+              className="relative"
+            >
+              <Languages className="w-5 h-5" />
+              <span className="absolute -bottom-1 -right-1 text-[10px] font-bold bg-primary text-primary-foreground rounded px-1">
+                {language.toUpperCase()}
+              </span>
+            </Button>
+            
+            {/* Dark Mode Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </Button>
+
             <Button variant="cyber" size="lg">
-              Get Started
+              {t("getStarted")}
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setLanguage(language === "en" ? "ta" : "en")}
+            >
+              <Languages className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+            >
+              {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </Button>
+            <button
+              className="p-2"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -103,7 +149,7 @@ export const Navbar = () => {
                 );
               })}
               <Button variant="cyber" className="mt-2">
-                Get Started
+                {t("getStarted")}
               </Button>
             </div>
           </motion.div>

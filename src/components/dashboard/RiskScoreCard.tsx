@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Shield, TrendingUp, TrendingDown } from "lucide-react";
+import { ShieldCheck, TrendingUp, TrendingDown } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface RiskScoreCardProps {
   score: number;
@@ -8,6 +9,8 @@ interface RiskScoreCardProps {
 }
 
 export const RiskScoreCard = ({ score, trend, trendValue }: RiskScoreCardProps) => {
+  const { t } = useLanguage();
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-success";
     if (score >= 60) return "text-warning";
@@ -15,10 +18,10 @@ export const RiskScoreCard = ({ score, trend, trendValue }: RiskScoreCardProps) 
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 80) return "Excellent";
-    if (score >= 60) return "Good";
-    if (score >= 40) return "Fair";
-    return "At Risk";
+    if (score >= 80) return t("excellent");
+    if (score >= 60) return t("good");
+    if (score >= 40) return t("fair");
+    return t("atRisk");
   };
 
   const circumference = 2 * Math.PI * 90;
@@ -32,7 +35,7 @@ export const RiskScoreCard = ({ score, trend, trendValue }: RiskScoreCardProps) 
       className="relative p-6 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display font-semibold text-lg">Cyber Risk Score</h3>
+        <h3 className="font-display font-semibold text-lg">{t("cyberRiskScore")}</h3>
         <div className={`flex items-center gap-1 text-sm ${trend === "up" ? "text-success" : "text-destructive"}`}>
           {trend === "up" ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
           <span>{trendValue}%</span>
@@ -84,7 +87,7 @@ export const RiskScoreCard = ({ score, trend, trendValue }: RiskScoreCardProps) 
               transition={{ delay: 0.5, type: "spring" }}
               className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-2"
             >
-              <Shield className="w-8 h-8 text-primary-foreground" />
+              <ShieldCheck className="w-8 h-8 text-primary-foreground" />
             </motion.div>
             <motion.span
               initial={{ opacity: 0 }}
@@ -103,9 +106,9 @@ export const RiskScoreCard = ({ score, trend, trendValue }: RiskScoreCardProps) 
 
       <div className="mt-4 grid grid-cols-3 gap-4 text-center">
         {[
-          { label: "Scans", value: "24" },
-          { label: "Threats", value: "3" },
-          { label: "Resolved", value: "21" },
+          { label: t("scans"), value: "24" },
+          { label: t("threats"), value: "3" },
+          { label: t("resolved"), value: "21" },
         ].map((stat, i) => (
           <div key={i} className="p-3 rounded-lg bg-muted/50">
             <div className="text-xl font-bold font-display">{stat.value}</div>
