@@ -11,9 +11,12 @@ import {
   ChevronRight,
   Sparkles,
   CircleCheck,
-  Circle,
   ArrowRight,
-  BookOpen
+  BookOpen,
+  Clock,
+  Flame,
+  Zap,
+  Award
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -22,7 +25,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-const lessons = [
+type Difficulty = "beginner" | "intermediate" | "advanced";
+
+interface Lesson {
+  id: number;
+  title: { en: string; ta: string };
+  description: { en: string; ta: string };
+  duration: string;
+  xp: number;
+  completed: boolean;
+  locked: boolean;
+  difficulty: Difficulty;
+}
+
+const lessons: Lesson[] = [
   {
     id: 1,
     title: { en: "Password Security Basics", ta: "கடவுச்சொல் பாதுகாப்பு அடிப்படைகள்" },
@@ -31,6 +47,7 @@ const lessons = [
     xp: 100,
     completed: true,
     locked: false,
+    difficulty: "beginner",
   },
   {
     id: 2,
@@ -40,6 +57,7 @@ const lessons = [
     xp: 150,
     completed: true,
     locked: false,
+    difficulty: "beginner",
   },
   {
     id: 3,
@@ -49,6 +67,7 @@ const lessons = [
     xp: 120,
     completed: false,
     locked: false,
+    difficulty: "beginner",
   },
   {
     id: 4,
@@ -58,31 +77,28 @@ const lessons = [
     xp: 200,
     completed: false,
     locked: false,
+    difficulty: "intermediate",
   },
   {
     id: 5,
-    title: { en: "Safe Online Shopping", ta: "பாதுகாப்பான ஆன்லைன் ஷாப்பிங்" },
-    description: { en: "Shop securely and avoid scams", ta: "பாதுகாப்பாக ஷாப்பிங் செய்து மோசடிகளைத் தவிர்க்கவும்" },
-    duration: "15 min",
-    xp: 150,
+    title: { en: "Advanced Threat Detection", ta: "மேம்பட்ட அச்சுறுத்தல் கண்டறிதல்" },
+    description: { en: "Master complex security scenarios", ta: "சிக்கலான பாதுகாப்பு சூழ்நிலைகளில் தேர்ச்சி" },
+    duration: "25 min",
+    xp: 250,
     completed: false,
-    locked: true,
+    locked: false,
+    difficulty: "intermediate",
   },
   {
     id: 6,
-    title: { en: "Mobile Device Security", ta: "மொபைல் சாதன பாதுகாப்பு" },
-    description: { en: "Secure your smartphone and tablet", ta: "உங்கள் ஸ்மார்ட்போன் மற்றும் டேப்லெட்டைப் பாதுகாக்கவும்" },
-    duration: "18 min",
-    xp: 180,
+    title: { en: "Network Security Mastery", ta: "நெட்வொர்க் பாதுகாப்பு தேர்ச்சி" },
+    description: { en: "Expert-level network protection techniques", ta: "நிபுணர் நிலை நெட்வொர்க் பாதுகாப்பு நுட்பங்கள்" },
+    duration: "30 min",
+    xp: 300,
     completed: false,
     locked: true,
+    difficulty: "advanced",
   },
-];
-
-const quizData = [
-  { id: 1, title: { en: "Password Quiz", ta: "கடவுச்சொல் வினாடி வினா" }, questions: 10, score: 85, completed: true },
-  { id: 2, title: { en: "Phishing Challenge", ta: "ஃபிஷிங் சவால்" }, questions: 15, score: 90, completed: true },
-  { id: 3, title: { en: "Social Media Test", ta: "சமூக ஊடக சோதனை" }, questions: 12, score: null, completed: false },
 ];
 
 const sampleQuizQuestions = [
@@ -124,6 +140,29 @@ const sampleQuizQuestions = [
   }
 ];
 
+const getDifficultyConfig = (difficulty: Difficulty) => {
+  switch (difficulty) {
+    case "beginner":
+      return { 
+        label: { en: "Beginner", ta: "தொடக்கநிலை" }, 
+        color: "bg-green-500/10 text-green-600 border-green-500/30",
+        icon: Zap
+      };
+    case "intermediate":
+      return { 
+        label: { en: "Intermediate", ta: "இடைநிலை" }, 
+        color: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        icon: Flame
+      };
+    case "advanced":
+      return { 
+        label: { en: "Advanced", ta: "மேம்பட்ட" }, 
+        color: "bg-red-500/10 text-red-600 border-red-500/30",
+        icon: Award
+      };
+  }
+};
+
 const Awareness = () => {
   const { language, t } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
@@ -132,9 +171,16 @@ const Awareness = () => {
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showLesson, setShowLesson] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [filterDifficulty, setFilterDifficulty] = useState<Difficulty | "all">("all");
 
   const completedLessons = lessons.filter(l => l.completed).length;
   const totalXP = lessons.filter(l => l.completed).reduce((acc, l) => acc + l.xp, 0);
+  const streak = 7; // Mock streak
+
+  const filteredLessons = filterDifficulty === "all" 
+    ? lessons 
+    : lessons.filter(l => l.difficulty === filterDifficulty);
 
   const handleAnswerSubmit = () => {
     if (selectedAnswer === null) return;
@@ -162,6 +208,18 @@ const Awareness = () => {
     setShowQuiz(false);
   };
 
+  const handleStartLesson = (lesson: Lesson) => {
+    if (lesson.locked) {
+      toast.error(language === "ta" ? "இந்த பாடம் பூட்டப்பட்டுள்ளது" : "This lesson is locked");
+      return;
+    }
+    setSelectedLesson(lesson);
+    setShowLesson(true);
+  };
+
+  const finalScore = Math.round((score / sampleQuizQuestions.length) * 100);
+  const isChampion = finalScore >= 90;
+
   return (
     <>
       <Helmet>
@@ -178,6 +236,15 @@ const Awareness = () => {
               animate={{ opacity: 1, y: 0 }}
               className="mb-8"
             >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"
+              >
+                <GraduationCap className="w-4 h-4" />
+                {language === "ta" ? "கற்றல் மையம்" : "Learning Hub"}
+              </motion.div>
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-2">
                 <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{t("learn")}</span> & {language === "ta" ? "பாதுகாப்பாக இரு" : "Stay Safe"}
               </h1>
@@ -189,7 +256,7 @@ const Awareness = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"
+              className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
             >
               <div className="p-6 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl">
                 <div className="flex items-center gap-4">
@@ -218,15 +285,155 @@ const Awareness = () => {
 
               <div className="p-6 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl">
                 <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
+                    <Flame className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{language === "ta" ? "தொடர்" : "Streak"}</p>
+                    <p className="text-2xl font-bold font-display">{streak} {language === "ta" ? "நாள்" : "days"}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-xl">
+                <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
                     <Trophy className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t("quizzesPassed")}</p>
-                    <p className="text-2xl font-bold font-display">{quizData.filter(q => q.completed).length}/{quizData.length}</p>
+                    <p className="text-2xl font-bold font-display">2/3</p>
                   </div>
                 </div>
               </div>
+            </motion.div>
+
+            {/* Filter Tabs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="flex flex-wrap gap-2 mb-6"
+            >
+              {["all", "beginner", "intermediate", "advanced"].map((diff) => (
+                <Button
+                  key={diff}
+                  variant={filterDifficulty === diff ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilterDifficulty(diff as Difficulty | "all")}
+                  className="rounded-full"
+                >
+                  {diff === "all" 
+                    ? (language === "ta" ? "அனைத்தும்" : "All")
+                    : getDifficultyConfig(diff as Difficulty).label[language]
+                  }
+                </Button>
+              ))}
+            </motion.div>
+
+            {/* Lessons Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {filteredLessons.map((lesson, index) => {
+                const diffConfig = getDifficultyConfig(lesson.difficulty);
+                const DiffIcon = diffConfig.icon;
+                
+                return (
+                  <motion.div
+                    key={lesson.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: lesson.locked ? 1 : 1.02, y: lesson.locked ? 0 : -5 }}
+                    className={`relative p-6 rounded-2xl bg-card/70 backdrop-blur-xl border shadow-xl transition-all ${
+                      lesson.locked 
+                        ? "border-border/30 opacity-60" 
+                        : lesson.completed 
+                          ? "border-green-500/30 bg-green-500/5" 
+                          : "border-border/50 hover:shadow-2xl"
+                    }`}
+                  >
+                    {/* Completion badge */}
+                    {lesson.completed && (
+                      <div className="absolute -top-2 -right-2">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center shadow-lg"
+                        >
+                          <CheckCircle2 className="w-5 h-5 text-white" />
+                        </motion.div>
+                      </div>
+                    )}
+
+                    {/* Lock overlay */}
+                    {lesson.locked && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/50 rounded-2xl">
+                        <Lock className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                    )}
+
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${
+                        lesson.difficulty === "beginner" ? "from-green-400 to-emerald-500" :
+                        lesson.difficulty === "intermediate" ? "from-amber-400 to-orange-500" :
+                        "from-red-400 to-rose-500"
+                      } flex items-center justify-center`}>
+                        <BookOpen className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-display font-semibold mb-1">{lesson.title[language]}</h3>
+                        <p className="text-sm text-muted-foreground">{lesson.description[language]}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className={`text-xs px-2.5 py-1 rounded-full border ${diffConfig.color} flex items-center gap-1`}>
+                        <DiffIcon className="w-3 h-3" />
+                        {diffConfig.label[language]}
+                      </span>
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {lesson.duration}
+                      </span>
+                      <span className="text-xs text-amber-500 font-medium flex items-center gap-1">
+                        <Star className="w-3 h-3" />
+                        +{lesson.xp} XP
+                      </span>
+                    </div>
+
+                    <Button
+                      variant={lesson.completed ? "outline" : "default"}
+                      className="w-full"
+                      disabled={lesson.locked}
+                      onClick={() => handleStartLesson(lesson)}
+                    >
+                      {lesson.completed 
+                        ? (language === "ta" ? "மீண்டும் பார்" : "Review")
+                        : (language === "ta" ? "தொடங்கு" : "Start")
+                      }
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Take Quiz Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex justify-center"
+            >
+              <Button
+                size="lg"
+                onClick={() => setShowQuiz(true)}
+                className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                {language === "ta" ? "வினாடி வினா எடு" : "Take Quiz"}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
             </motion.div>
 
             {/* Quiz Modal */}
@@ -242,7 +449,9 @@ const Awareness = () => {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
-                    className="w-full max-w-lg p-6 rounded-2xl bg-card border border-border shadow-2xl"
+                    className={`w-full max-w-lg p-6 rounded-2xl bg-card border shadow-2xl ${
+                      quizCompleted && isChampion ? "border-amber-500/50" : "border-border"
+                    }`}
                   >
                     {!quizCompleted ? (
                       <>
@@ -300,23 +509,87 @@ const Awareness = () => {
                         </div>
                       </>
                     ) : (
-                      <div className="text-center py-6">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mx-auto mb-4">
-                          <Trophy className="w-10 h-10 text-primary-foreground" />
-                        </div>
+                      <div className="text-center py-6 relative overflow-hidden">
+                        {/* Champion confetti effect */}
+                        {isChampion && (
+                          <div className="absolute inset-0 pointer-events-none">
+                            {[...Array(30)].map((_, i) => (
+                              <motion.div
+                                key={i}
+                                initial={{ 
+                                  opacity: 1, 
+                                  y: -20, 
+                                  x: `${Math.random() * 100}%`,
+                                  rotate: 0 
+                                }}
+                                animate={{ 
+                                  opacity: 0, 
+                                  y: 300, 
+                                  rotate: Math.random() * 360 
+                                }}
+                                transition={{ 
+                                  duration: 2 + Math.random(), 
+                                  delay: Math.random() * 0.5 
+                                }}
+                                className="absolute"
+                              >
+                                <Sparkles className={`w-4 h-4 ${
+                                  i % 3 === 0 ? "text-amber-400" : i % 3 === 1 ? "text-yellow-400" : "text-orange-400"
+                                }`} />
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring" }}
+                          className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
+                            isChampion 
+                              ? "bg-gradient-to-br from-amber-400 to-yellow-500 shadow-lg shadow-amber-500/30" 
+                              : "bg-gradient-to-br from-primary to-secondary"
+                          }`}
+                        >
+                          <Trophy className="w-10 h-10 text-white" />
+                        </motion.div>
+                        
                         <h3 className="font-display font-bold text-2xl mb-2">
                           {language === "ta" ? "வினாடி வினா முடிந்தது!" : "Quiz Completed!"}
                         </h3>
+                        
                         <p className="text-muted-foreground mb-4">
                           {language === "ta" 
                             ? `உங்கள் மதிப்பெண்: ${score}/${sampleQuizQuestions.length}`
                             : `Your score: ${score}/${sampleQuizQuestions.length}`
                           }
                         </p>
-                        <div className="text-4xl font-bold font-display text-primary mb-6">
-                          {Math.round((score / sampleQuizQuestions.length) * 100)}%
-                        </div>
-                        <Button onClick={resetQuiz} className="w-full">
+                        
+                        <motion.div 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.3, type: "spring" }}
+                          className={`text-5xl font-bold font-display mb-4 ${
+                            isChampion ? "text-amber-500" : "text-primary"
+                          }`}
+                        >
+                          {finalScore}%
+                        </motion.div>
+
+                        {isChampion && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold text-sm shadow-lg mb-4"
+                          >
+                            <Trophy className="w-4 h-4" />
+                            {language === "ta" ? "சைபர் சாம்பியன்!" : "Cyber Champion!"}
+                            <Sparkles className="w-4 h-4" />
+                          </motion.div>
+                        )}
+
+                        <Button onClick={resetQuiz} className="w-full mt-4">
                           {language === "ta" ? "மூடு" : "Close"}
                         </Button>
                       </div>
@@ -328,7 +601,7 @@ const Awareness = () => {
 
             {/* Lesson Modal */}
             <AnimatePresence>
-              {showLesson && (
+              {showLesson && selectedLesson && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -347,196 +620,47 @@ const Awareness = () => {
                       </div>
                       <div>
                         <h3 className="font-display font-bold text-xl">
-                          {language === "ta" ? "சமூக ஊடக பாதுகாப்பு" : "Social Media Safety"}
+                          {selectedLesson.title[language]}
                         </h3>
-                        <p className="text-sm text-muted-foreground">12 min • 120 XP</p>
+                        <p className="text-sm text-muted-foreground">
+                          {selectedLesson.duration} • +{selectedLesson.xp} XP
+                        </p>
                       </div>
                     </div>
 
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
-                      <h4 className="font-display">{language === "ta" ? "அறிமுகம்" : "Introduction"}</h4>
+                    <div className="prose prose-sm dark:prose-invert max-w-none mb-6">
                       <p className="text-muted-foreground">
-                        {language === "ta" 
-                          ? "சமூக ஊடகங்கள் நமது அன்றாட வாழ்க்கையின் ஒரு பகுதியாகிவிட்டன. ஆனால், இவற்றைப் பயன்படுத்தும்போது நமது தனிப்பட்ட தகவல்களைப் பாதுகாப்பது மிக முக்கியம்."
-                          : "Social media has become part of our daily lives. However, protecting our personal information while using these platforms is crucial."
-                        }
+                        {selectedLesson.description[language]}
                       </p>
-
-                      <h4 className="font-display mt-6">{language === "ta" ? "முக்கிய குறிப்புகள்" : "Key Tips"}</h4>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2">
-                          <CircleCheck className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "வலுவான கடவுச்சொற்களைப் பயன்படுத்துங்கள்" : "Use strong passwords"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CircleCheck className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "இரு-படி சரிபார்ப்பை இயக்குங்கள்" : "Enable two-factor authentication"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CircleCheck className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "தனிப்பட்ட தகவல்களைப் பகிர்வதில் கவனமாக இருங்கள்" : "Be careful sharing personal information"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CircleCheck className="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "தெரியாதவர்களிடமிருந்து வரும் நட்பு கோரிக்கைகளை ஏற்க வேண்டாம்" : "Don't accept friend requests from strangers"}</span>
-                        </li>
-                      </ul>
-
-                      <h4 className="font-display mt-6">{language === "ta" ? "தவிர்க்க வேண்டியவை" : "Things to Avoid"}</h4>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2">
-                          <Circle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "உங்கள் இருப்பிடத்தை நேரடியாக பகிர்வது" : "Sharing your location in real-time"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <Circle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "பொது Wi-Fi இல் உள்நுழைவது" : "Logging in on public WiFi"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <Circle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                          <span>{language === "ta" ? "சந்தேகத்திற்குரிய இணைப்புகளை கிளிக் செய்வது" : "Clicking suspicious links"}</span>
-                        </li>
-                      </ul>
+                      <div className="mt-4 p-4 rounded-xl bg-muted/50">
+                        <p className="text-sm">
+                          {language === "ta" 
+                            ? "இந்த பாடத்தில் முக்கியமான பாதுகாப்பு நடைமுறைகளை கற்றுக்கொள்வீர்கள்."
+                            : "In this lesson, you will learn important security practices to keep yourself safe online."
+                          }
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="flex gap-3 mt-6">
+                    <div className="flex gap-3">
                       <Button variant="outline" onClick={() => setShowLesson(false)} className="flex-1">
                         {language === "ta" ? "மூடு" : "Close"}
                       </Button>
-                      <Button className="flex-1" onClick={() => { setShowLesson(false); setShowQuiz(true); }}>
-                        {language === "ta" ? "வினாடி வினா எடு" : "Take Quiz"}
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                      <Button 
+                        onClick={() => {
+                          toast.success(language === "ta" ? "பாடம் முடிந்தது!" : "Lesson completed!");
+                          setShowLesson(false);
+                        }} 
+                        className="flex-1"
+                      >
+                        {language === "ta" ? "முடிந்தது எனக் குறி" : "Mark Complete"}
+                        <CircleCheck className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
                   </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Lessons */}
-              <div className="lg:col-span-2">
-                <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  {t("lessons")}
-                </h2>
-                <div className="space-y-4">
-                  {lessons.map((lesson, index) => (
-                    <motion.div
-                      key={lesson.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className={`group p-5 rounded-2xl border transition-all duration-300 ${
-                        lesson.locked 
-                          ? "bg-muted/30 border-border/30 opacity-60" 
-                          : lesson.completed
-                          ? "bg-success/5 border-success/30 hover:border-success/50"
-                          : "bg-card/70 border-border/50 hover:border-primary/50 hover:shadow-lg"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                          lesson.completed 
-                            ? "bg-success/20" 
-                            : lesson.locked 
-                            ? "bg-muted" 
-                            : "bg-primary/10"
-                        }`}>
-                          {lesson.completed ? (
-                            <CheckCircle2 className="w-6 h-6 text-success" />
-                          ) : lesson.locked ? (
-                            <Lock className="w-6 h-6 text-muted-foreground" />
-                          ) : (
-                            <span className="text-xl font-bold font-display text-primary">{lesson.id}</span>
-                          )}
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold mb-1">{lesson.title[language]}</h3>
-                          <p className="text-sm text-muted-foreground truncate">{lesson.description[language]}</p>
-                          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                            <span>⏱ {lesson.duration}</span>
-                            <span>⭐ {lesson.xp} XP</span>
-                          </div>
-                        </div>
-
-                        {!lesson.locked && (
-                          <Button 
-                            variant={lesson.completed ? "outline" : "default"} 
-                            size="sm"
-                            className="flex-shrink-0"
-                            onClick={() => !lesson.completed && lesson.id === 3 && setShowLesson(true)}
-                          >
-                            {lesson.completed ? t("review") : t("start")}
-                            <ChevronRight className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quizzes */}
-              <div>
-                <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-warning" />
-                  {t("quizzes")}
-                </h2>
-                <div className="space-y-4">
-                  {quizData.map((quiz, index) => (
-                    <motion.div
-                      key={quiz.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                      className={`p-5 rounded-2xl border transition-all duration-300 ${
-                        quiz.completed 
-                          ? "bg-success/5 border-success/30" 
-                          : "bg-card/70 border-border/50 hover:border-primary/50"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold">{quiz.title[language]}</h3>
-                        {quiz.completed && quiz.score && (
-                          <span className="px-2 py-1 rounded-full bg-success/20 text-success text-xs font-medium">
-                            {quiz.score}%
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{quiz.questions} {t("questions")}</p>
-                      <Button 
-                        variant={quiz.completed ? "outline" : "default"} 
-                        size="sm" 
-                        className="w-full"
-                        onClick={() => setShowQuiz(true)}
-                      >
-                        {quiz.completed ? t("retake") : t("startQuiz")}
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Poster Generator Preview */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 border border-primary/20"
-                >
-                  <h3 className="font-semibold mb-2 flex items-center gap-2">
-                    🎨 {t("posterGenerator")}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {t("createPosterDesc")}
-                  </p>
-                  <Button variant="outline" size="sm" className="w-full">
-                    {t("createPoster")}
-                  </Button>
-                </motion.div>
-              </div>
-            </div>
           </div>
         </main>
       </div>
