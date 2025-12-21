@@ -133,7 +133,7 @@ const Settings = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-3 gap-3">
                       <Button
                         variant={language === "en" ? "default" : "outline"}
                         className="justify-start gap-2"
@@ -149,6 +149,14 @@ const Settings = () => {
                       >
                         {language === "ta" && <Check className="w-4 h-4" />}
                         தமிழ்
+                      </Button>
+                      <Button
+                        variant={language === "hi" ? "default" : "outline"}
+                        className="justify-start gap-2"
+                        onClick={() => setLanguage("hi")}
+                      >
+                        {language === "hi" && <Check className="w-4 h-4" />}
+                        हिंदी
                       </Button>
                     </div>
                   </CardContent>

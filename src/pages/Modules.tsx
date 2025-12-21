@@ -22,8 +22,8 @@ const modules = [
   {
     id: "app-security",
     icon: ShieldCheck,
-    title: { en: "Scam Detection", ta: "மோசடி கண்டறிதல்" },
-    description: { en: "Detect and prevent online scams in real-time", ta: "நிகழ்நேரத்தில் ஆன்லைன் மோசடிகளைக் கண்டறிந்து தடுக்கவும்" },
+    title: { en: "Scam Detection", ta: "மோசடி கண்டறிதல்", hi: "स्कैम पहचान" },
+    description: { en: "Detect and prevent online scams in real-time", ta: "நிகழ்நேரத்தில் ஆன்லைன் மோசடிகளைக் கண்டறிந்து தடுக்கவும்", hi: "रियल-टाइम में ऑनलाइन स्कैम का पता लगाएं और रोकें" },
     gradient: "from-emerald-400 via-teal-500 to-cyan-500",
     features: ["Real-time Detection", "AI Analysis", "Risk Scoring", "Prevention Tips"],
     placeholder: "Describe the suspicious message, email, or activity you want to analyze...",
@@ -31,8 +31,8 @@ const modules = [
   {
     id: "scam-detector",
     icon: MailWarning,
-    title: { en: "Phishing Detection", ta: "ஃபிஷிங் கண்டறிதல்" },
-    description: { en: "Identify phishing emails and fake websites", ta: "ஃபிஷிங் மின்னஞ்சல்கள் மற்றும் போலி இணையதளங்களைக் கண்டறியவும்" },
+    title: { en: "Phishing Detection", ta: "ஃபிஷிங் கண்டறிதல்", hi: "फ़िशिंग पहचान" },
+    description: { en: "Identify phishing emails and fake websites", ta: "ஃபிஷிங் மின்னஞ்சல்கள் மற்றும் போலி இணையதளங்களைக் கண்டறியவும்", hi: "फ़िशिंग ईमेल और नकली वेबसाइटों की पहचान करें" },
     gradient: "from-purple-400 via-violet-500 to-indigo-500",
     features: ["Email Scanning", "URL Verification", "Voice Analysis", "SMS Screening"],
     placeholder: "",
@@ -40,8 +40,8 @@ const modules = [
   {
     id: "deepfake",
     icon: ScanFace,
-    title: { en: "Deepfake Detection", ta: "டீப்ஃபேக் கண்டறிதல்" },
-    description: { en: "Spot AI-generated fake media and profiles", ta: "AI உருவாக்கிய போலி ஊடகங்கள் மற்றும் சுயவிவரங்களைக் கண்டறியவும்" },
+    title: { en: "Deepfake Detection", ta: "டீப்ஃபேக் கண்டறிதல்", hi: "डीपफेक पहचान" },
+    description: { en: "Spot AI-generated fake media and profiles", ta: "AI உருவாக்கிய போலி ஊடகங்கள் மற்றும் சுயவிவரங்களைக் கண்டறியவும்", hi: "AI-जनित नकली मीडिया और प्रोफाइल का पता लगाएं" },
     gradient: "from-orange-400 via-rose-500 to-pink-500",
     features: ["Image Analysis", "Video Verification", "Profile Check", "AI Detection"],
     placeholder: "Describe the profile or content you want to verify...",
@@ -49,8 +49,8 @@ const modules = [
   {
     id: "network",
     icon: Activity,
-    title: { en: "Network Monitoring", ta: "நெட்வொர்க் கண்காணிப்பு" },
-    description: { en: "Monitor and visualize network security", ta: "நெட்வொர்க் பாதுகாப்பைக் கண்காணித்து காட்சிப்படுத்தவும்" },
+    title: { en: "Network Monitoring", ta: "நெட்வொர்க் கண்காணிப்பு", hi: "नेटवर्क मॉनिटरिंग" },
+    description: { en: "Monitor and visualize network security", ta: "நெட்வொர்க் பாதுகாப்பைக் கண்காணித்து காட்சிப்படுத்தவும்", hi: "नेटवर्क सुरक्षा की निगरानी और दृश्य करें" },
     gradient: "from-green-400 via-emerald-500 to-teal-500",
     features: ["Traffic Analysis", "Anomaly Detection", "Threat Mapping", "Real-time Alerts"],
     placeholder: "Paste network logs or describe suspicious network activity...",
@@ -58,8 +58,8 @@ const modules = [
   {
     id: "dark-web",
     icon: EyeOff,
-    title: { en: "Dark Web Awareness", ta: "டார்க் வெப் விழிப்புணர்வு" },
-    description: { en: "Learn about dark web threats and protection", ta: "டார்க் வெப் அச்சுறுத்தல்கள் மற்றும் பாதுகாப்பு பற்றி அறியவும்" },
+    title: { en: "Dark Web Awareness", ta: "டார்க் வெப் விழிப்புணர்வு", hi: "डार्क वेब जागरूकता" },
+    description: { en: "Learn about dark web threats and protection", ta: "டார்க் வெப் அச்சுறுத்தல்கள் மற்றும் பாதுகாப்பு பற்றி அறியவும்", hi: "डार्क वेब खतरों और सुरक्षा के बारे में जानें" },
     gradient: "from-slate-400 via-zinc-500 to-gray-600",
     features: ["Threat Education", "Safety Tips", "Data Protection", "Privacy Guide"],
     placeholder: "Ask about dark web threats or cybersecurity topics...",
@@ -67,8 +67,8 @@ const modules = [
   {
     id: "learning",
     icon: GraduationCap,
-    title: { en: "Cyber Learning Hub", ta: "சைபர் கற்றல் மையம்" },
-    description: { en: "Interactive lessons for digital safety", ta: "டிஜிட்டல் பாதுகாப்புக்கான ஊடாடும் பாடங்கள்" },
+    title: { en: "Cyber Learning Hub", ta: "சைபர் கற்றல் மையம்", hi: "साइबर लर्निंग हब" },
+    description: { en: "Interactive lessons for digital safety", ta: "டிஜிட்டல் பாதுகாப்புக்கான ஊடாடும் பாடங்கள்", hi: "डिजिटल सुरक्षा के लिए इंटरैक्टिव पाठ" },
     gradient: "from-amber-400 via-yellow-500 to-orange-500",
     features: ["Video Lessons", "Quizzes", "Certifications", "Progress Tracking"],
     placeholder: "What topic would you like to learn about?",
@@ -177,13 +177,13 @@ const Modules = () => {
                     </div>
                     
                     {/* Icon */}
-                    <div className="absolute -bottom-7 left-6">
+                    <div className="absolute -bottom-7 left-6 z-20">
                       <motion.div 
                         whileHover={{ rotate: 12, scale: 1.1 }}
                         transition={{ type: "spring" }}
-                        className="w-14 h-14 rounded-2xl bg-card shadow-xl flex items-center justify-center border border-border/50"
+                        className="w-14 h-14 rounded-2xl bg-card shadow-xl flex items-center justify-center border border-border/50 relative z-20"
                       >
-                        <module.icon className="w-7 h-7 text-foreground" strokeWidth={1.5} />
+                        <module.icon className="w-7 h-7 text-foreground relative z-30" strokeWidth={1.5} />
                       </motion.div>
                     </div>
                   </div>
