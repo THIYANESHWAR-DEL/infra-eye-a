@@ -29,8 +29,8 @@ type Difficulty = "beginner" | "intermediate" | "advanced";
 
 interface Lesson {
   id: number;
-  title: { en: string; ta: string };
-  description: { en: string; ta: string };
+  title: { en: string; ta: string; hi: string };
+  description: { en: string; ta: string; hi: string };
   duration: string;
   xp: number;
   completed: boolean;
@@ -41,8 +41,8 @@ interface Lesson {
 const lessons: Lesson[] = [
   {
     id: 1,
-    title: { en: "Password Security Basics", ta: "கடவுச்சொல் பாதுகாப்பு அடிப்படைகள்" },
-    description: { en: "Learn to create and manage strong passwords", ta: "வலுவான கடவுச்சொற்களை உருவாக்க கற்றுக்கொள்ளுங்கள்" },
+    title: { en: "Password Security Basics", ta: "கடவுச்சொல் பாதுகாப்பு அடிப்படைகள்", hi: "पासवर्ड सुरक्षा मूल बातें" },
+    description: { en: "Learn to create and manage strong passwords", ta: "வலுவான கடவுச்சொற்களை உருவாக்க கற்றுக்கொள்ளுங்கள்", hi: "मजबूत पासवर्ड बनाना और प्रबंधित करना सीखें" },
     duration: "10 min",
     xp: 100,
     completed: true,
@@ -51,8 +51,8 @@ const lessons: Lesson[] = [
   },
   {
     id: 2,
-    title: { en: "Recognizing Phishing Emails", ta: "ஃபிஷிங் மின்னஞ்சல்களை அடையாளம் காணுதல்" },
-    description: { en: "Identify fake emails and protect your data", ta: "போலி மின்னஞ்சல்களை கண்டறிந்து உங்கள் தரவைப் பாதுகாக்கவும்" },
+    title: { en: "Recognizing Phishing Emails", ta: "ஃபிஷிங் மின்னஞ்சல்களை அடையாளம் காணுதல்", hi: "फ़िशिंग ईमेल की पहचान" },
+    description: { en: "Identify fake emails and protect your data", ta: "போலி மின்னஞ்சல்களை கண்டறிந்து உங்கள் தரவைப் பாதுகாக்கவும்", hi: "नकली ईमेल की पहचान करें और अपने डेटा की सुरक्षा करें" },
     duration: "15 min",
     xp: 150,
     completed: true,
@@ -61,8 +61,8 @@ const lessons: Lesson[] = [
   },
   {
     id: 3,
-    title: { en: "Social Media Safety", ta: "சமூக ஊடக பாதுகாப்பு" },
-    description: { en: "Protect your identity on social platforms", ta: "சமூக தளங்களில் உங்கள் அடையாளத்தைப் பாதுகாக்கவும்" },
+    title: { en: "Social Media Safety", ta: "சமூக ஊடக பாதுகாப்பு", hi: "सोशल मीडिया सुरक्षा" },
+    description: { en: "Protect your identity on social platforms", ta: "சமூக தளங்களில் உங்கள் அடையாளத்தைப் பாதுகாக்கவும்", hi: "सोशल प्लेटफॉर्म पर अपनी पहचान सुरक्षित रखें" },
     duration: "12 min",
     xp: 120,
     completed: false,
@@ -71,8 +71,28 @@ const lessons: Lesson[] = [
   },
   {
     id: 4,
-    title: { en: "Understanding Deepfakes", ta: "டீப்ஃபேக்குகளைப் புரிந்துகொள்வது" },
-    description: { en: "Learn how AI generates fake media", ta: "AI போலி ஊடகங்களை எவ்வாறு உருவாக்குகிறது என்பதை அறியுங்கள்" },
+    title: { en: "Safe Online Shopping", ta: "பாதுகாப்பான ஆன்லைன் ஷாப்பிங்", hi: "सुरक्षित ऑनलाइन शॉपिंग" },
+    description: { en: "Shop safely and avoid online fraud", ta: "பாதுகாப்பாக ஷாப்பிங் செய்து ஆன்லைன் மோசடியைத் தவிர்க்கவும்", hi: "सुरक्षित खरीदारी करें और ऑनलाइन धोखाधड़ी से बचें" },
+    duration: "15 min",
+    xp: 150,
+    completed: false,
+    locked: false,
+    difficulty: "beginner",
+  },
+  {
+    id: 5,
+    title: { en: "UPI Payment Safety", ta: "UPI கட்டண பாதுகாப்பு", hi: "UPI भुगतान सुरक्षा" },
+    description: { en: "Secure your UPI transactions from fraud", ta: "உங்கள் UPI பரிவர்த்தனைகளை மோசடியிலிருந்து பாதுகாக்கவும்", hi: "अपने UPI लेनदेन को धोखाधड़ी से सुरक्षित रखें" },
+    duration: "12 min",
+    xp: 120,
+    completed: false,
+    locked: false,
+    difficulty: "beginner",
+  },
+  {
+    id: 6,
+    title: { en: "Understanding Deepfakes", ta: "டீப்ஃபேக்குகளைப் புரிந்துகொள்வது", hi: "डीपफेक को समझना" },
+    description: { en: "Learn how AI generates fake media", ta: "AI போலி ஊடகங்களை எவ்வாறு உருவாக்குகிறது என்பதை அறியுங்கள்", hi: "जानें कि AI नकली मीडिया कैसे बनाता है" },
     duration: "20 min",
     xp: 200,
     completed: false,
@@ -80,9 +100,9 @@ const lessons: Lesson[] = [
     difficulty: "intermediate",
   },
   {
-    id: 5,
-    title: { en: "Advanced Threat Detection", ta: "மேம்பட்ட அச்சுறுத்தல் கண்டறிதல்" },
-    description: { en: "Master complex security scenarios", ta: "சிக்கலான பாதுகாப்பு சூழ்நிலைகளில் தேர்ச்சி" },
+    id: 7,
+    title: { en: "Advanced Threat Detection", ta: "மேம்பட்ட அச்சுறுத்தல் கண்டறிதல்", hi: "उन्नत खतरा पहचान" },
+    description: { en: "Master complex security scenarios", ta: "சிக்கலான பாதுகாப்பு சூழ்நிலைகளில் தேர்ச்சி", hi: "जटिल सुरक्षा परिदृश्यों में महारत हासिल करें" },
     duration: "25 min",
     xp: 250,
     completed: false,
@@ -90,11 +110,31 @@ const lessons: Lesson[] = [
     difficulty: "intermediate",
   },
   {
-    id: 6,
-    title: { en: "Network Security Mastery", ta: "நெட்வொர்க் பாதுகாப்பு தேர்ச்சி" },
-    description: { en: "Expert-level network protection techniques", ta: "நிபுணர் நிலை நெட்வொர்க் பாதுகாப்பு நுட்பங்கள்" },
+    id: 8,
+    title: { en: "Crypto Scam Awareness", ta: "கிரிப்டோ மோசடி விழிப்புணர்வு", hi: "क्रिप्टो स्कैम जागरूकता" },
+    description: { en: "Identify and avoid cryptocurrency scams", ta: "கிரிப்டோகரன்சி மோசடிகளை அடையாளம் கண்டு தவிர்க்கவும்", hi: "क्रिप्टोकरेंसी स्कैम की पहचान करें और बचें" },
+    duration: "18 min",
+    xp: 180,
+    completed: false,
+    locked: false,
+    difficulty: "intermediate",
+  },
+  {
+    id: 9,
+    title: { en: "Network Security Mastery", ta: "நெட்வொர்க் பாதுகாப்பு தேர்ச்சி", hi: "नेटवर्क सुरक्षा में महारत" },
+    description: { en: "Expert-level network protection techniques", ta: "நிபுணர் நிலை நெட்வொர்க் பாதுகாப்பு நுட்பங்கள்", hi: "विशेषज्ञ-स्तर की नेटवर्क सुरक्षा तकनीकें" },
     duration: "30 min",
     xp: 300,
+    completed: false,
+    locked: false,
+    difficulty: "advanced",
+  },
+  {
+    id: 10,
+    title: { en: "Digital Wellbeing", ta: "டிஜிட்டல் நல்வாழ்வு", hi: "डिजिटल कल्याण" },
+    description: { en: "Balance your digital life for mental health", ta: "மன ஆரோக்கியத்திற்காக உங்கள் டிஜிட்டல் வாழ்க்கையை சமநிலைப்படுத்துங்கள்", hi: "मानसिक स्वास्थ्य के लिए अपने डिजिटल जीवन को संतुलित करें" },
+    duration: "15 min",
+    xp: 150,
     completed: false,
     locked: true,
     difficulty: "advanced",
@@ -106,11 +146,13 @@ const sampleQuizQuestions = [
     id: 1,
     question: { 
       en: "What is the minimum recommended password length?", 
-      ta: "பரிந்துரைக்கப்பட்ட குறைந்தபட்ச கடவுச்சொல் நீளம் என்ன?" 
+      ta: "பரிந்துரைக்கப்பட்ட குறைந்தபட்ச கடவுச்சொல் நீளம் என்ன?",
+      hi: "न्यूनतम अनुशंसित पासवर्ड लंबाई क्या है?"
     },
     options: {
       en: ["6 characters", "8 characters", "12 characters", "4 characters"],
-      ta: ["6 எழுத்துக்கள்", "8 எழுத்துக்கள்", "12 எழுத்துக்கள்", "4 எழுத்துக்கள்"]
+      ta: ["6 எழுத்துக்கள்", "8 எழுத்துக்கள்", "12 எழுத்துக்கள்", "4 எழுத்துக்கள்"],
+      hi: ["6 अक्षर", "8 अक्षर", "12 अक्षर", "4 अक्षर"]
     },
     correct: 2
   },
@@ -118,11 +160,13 @@ const sampleQuizQuestions = [
     id: 2,
     question: { 
       en: "Which of these is a sign of a phishing email?", 
-      ta: "இவற்றில் எது ஃபிஷிங் மின்னஞ்சலின் அறிகுறி?" 
+      ta: "இவற்றில் எது ஃபிஷிங் மின்னஞ்சலின் அறிகுறி?",
+      hi: "इनमें से कौन सा फ़िशिंग ईमेल का संकेत है?"
     },
     options: {
       en: ["From a known sender", "Urgent action required", "No links in email", "Proper grammar"],
-      ta: ["தெரிந்த அனுப்புநரிடமிருந்து", "உடனடி நடவடிக்கை தேவை", "மின்னஞ்சலில் இணைப்புகள் இல்லை", "சரியான இலக்கணம்"]
+      ta: ["தெரிந்த அனுப்புநரிடமிருந்து", "உடனடி நடவடிக்கை தேவை", "மின்னஞ்சலில் இணைப்புகள் இல்லை", "சரியான இலக்கணம்"],
+      hi: ["ज्ञात प्रेषक से", "तत्काल कार्रवाई आवश्यक", "ईमेल में कोई लिंक नहीं", "उचित व्याकरण"]
     },
     correct: 1
   },
@@ -130,11 +174,41 @@ const sampleQuizQuestions = [
     id: 3,
     question: { 
       en: "What should you do if you receive a suspicious call?", 
-      ta: "சந்தேகத்திற்குரிய அழைப்பு வந்தால் என்ன செய்ய வேண்டும்?" 
+      ta: "சந்தேகத்திற்குரிய அழைப்பு வந்தால் என்ன செய்ய வேண்டும்?",
+      hi: "संदिग्ध कॉल मिलने पर क्या करना चाहिए?"
     },
     options: {
       en: ["Share OTP", "Hang up and verify", "Give bank details", "Click unknown links"],
-      ta: ["OTP பகிர்வு", "அழைப்பை துண்டித்து சரிபார்க்கவும்", "வங்கி விவரங்களை கொடுங்கள்", "தெரியாத இணைப்புகளை கிளிக் செய்யுங்கள்"]
+      ta: ["OTP பகிர்வு", "அழைப்பை துண்டித்து சரிபார்க்கவும்", "வங்கி விவரங்களை கொடுங்கள்", "தெரியாத இணைப்புகளை கிளிக் செய்யுங்கள்"],
+      hi: ["OTP साझा करें", "कॉल काटें और सत्यापित करें", "बैंक विवरण दें", "अज्ञात लिंक पर क्लिक करें"]
+    },
+    correct: 1
+  },
+  {
+    id: 4,
+    question: { 
+      en: "What is a deepfake?", 
+      ta: "டீப்ஃபேக் என்றால் என்ன?",
+      hi: "डीपफेक क्या है?"
+    },
+    options: {
+      en: ["A type of virus", "AI-generated fake media", "A secure website", "An encryption method"],
+      ta: ["ஒரு வகை வைரஸ்", "AI உருவாக்கிய போலி ஊடகம்", "பாதுகாப்பான இணையதளம்", "குறியாக்க முறை"],
+      hi: ["एक प्रकार का वायरस", "AI-जनित नकली मीडिया", "एक सुरक्षित वेबसाइट", "एक एन्क्रिप्शन विधि"]
+    },
+    correct: 1
+  },
+  {
+    id: 5,
+    question: { 
+      en: "Which is the safest way to verify a UPI request?", 
+      ta: "UPI கோரிக்கையை சரிபார்க்க பாதுகாப்பான வழி எது?",
+      hi: "UPI अनुरोध को सत्यापित करने का सबसे सुरक्षित तरीका कौन सा है?"
+    },
+    options: {
+      en: ["Click the link in SMS", "Call the sender directly", "Share OTP immediately", "Forward to friends"],
+      ta: ["SMS இல் உள்ள இணைப்பை கிளிக் செய்யவும்", "அனுப்புநரை நேரடியாக அழைக்கவும்", "உடனடியாக OTP பகிரவும்", "நண்பர்களுக்கு அனுப்பவும்"],
+      hi: ["SMS में लिंक पर क्लिक करें", "प्रेषक को सीधे कॉल करें", "तुरंत OTP साझा करें", "दोस्तों को फॉरवर्ड करें"]
     },
     correct: 1
   }
