@@ -282,11 +282,11 @@ export const ScamCallScanner = ({ onClose }: ScamCallScannerProps) => {
                 💡 {result.explanation}
               </p>
 
-              {result.issues && result.issues.length > 0 && (
+              {result.issues && (Array.isArray(result.issues) ? result.issues.length > 0 : result.issues) && (
                 <div className="text-left mb-4">
                   <p className="text-sm font-medium mb-2">Warning Signs:</p>
                   <ul className="space-y-1">
-                    {result.issues.map((issue, i) => (
+                    {(Array.isArray(result.issues) ? result.issues : [result.issues]).map((issue, i) => (
                       <li key={i} className="text-sm text-muted-foreground flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
                         {issue}
@@ -296,11 +296,11 @@ export const ScamCallScanner = ({ onClose }: ScamCallScannerProps) => {
                 </div>
               )}
 
-              {result.recommendations && result.recommendations.length > 0 && (
+              {result.recommendations && (Array.isArray(result.recommendations) ? result.recommendations.length > 0 : result.recommendations) && (
                 <div className="text-left mb-4">
                   <p className="text-sm font-medium mb-2">Recommendations:</p>
                   <ul className="space-y-1">
-                    {result.recommendations.map((rec, i) => (
+                    {(Array.isArray(result.recommendations) ? result.recommendations : [result.recommendations]).map((rec, i) => (
                       <li key={i} className="text-sm text-success flex items-center gap-2">
                         <CheckCircle className="w-3 h-3 shrink-0" />
                         {rec}
