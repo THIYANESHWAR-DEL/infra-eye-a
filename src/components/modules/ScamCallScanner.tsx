@@ -73,7 +73,7 @@ export const ScamCallScanner = ({ onClose }: ScamCallScannerProps) => {
       description: "Checking for scam indicators",
     });
     
-    await scan("scam-detector", textInput);
+    await scan("scam-call", textInput);
   };
 
   const getStatusIcon = (status: ScanResult["status"]) => {

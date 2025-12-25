@@ -29,19 +29,36 @@ serve(async (req) => {
         - explanation: brief explanation of why this rating was given
         - recommendations: array of actionable recommendations`,
       
-      "scam-detector": `You are an AI specialized in detecting scam calls and phishing attempts.
-        Analyze the provided call transcript or message for scam indicators. Look for:
-        - Urgency tactics, threats, or pressure
-        - Requests for personal/financial information
-        - Impersonation of officials or companies
-        - Too-good-to-be-true offers
-        - Suspicious links or callback numbers
+      "scam-call": `You are an AI specialized in detecting scam phone calls and vishing attacks.
+        Analyze the provided call transcript or voice message for scam indicators. Look for:
+        - Urgency tactics, threats, or pressure to act immediately
+        - Requests for OTP, PIN, bank details, or Aadhaar number
+        - Impersonation of bank officials, police, or government agencies
+        - Claims about blocked accounts, legal issues, or lottery wins
+        - Suspicious callback numbers or requests
         Return a JSON response with:
         - status: "safe" | "warning" | "danger"
         - score: number 0-100 (100 = completely safe)
         - issues: array of specific scam indicators found
         - explanation: detailed explanation of the analysis
-        - scamType: type of scam if detected (e.g., "phishing", "vishing", "impersonation")
+        - scamType: type of scam if detected (e.g., "vishing", "impersonation", "tech-support", "lottery")
+        - recommendations: what the user should do`,
+
+      "phishing": `You are an AI specialized in detecting phishing emails, SMS, and fake websites.
+        Analyze the provided email content or URL for phishing indicators. Look for:
+        - Suspicious sender addresses or domain names
+        - Urgent or threatening language
+        - Grammar and spelling mistakes
+        - Requests for login credentials or personal information
+        - Suspicious links that don't match the claimed organization
+        - Mismatched or spoofed URLs
+        - Generic greetings instead of personalized content
+        Return a JSON response with:
+        - status: "safe" | "warning" | "danger"
+        - score: number 0-100 (100 = completely safe)
+        - issues: array of specific phishing indicators found
+        - explanation: detailed explanation of the analysis
+        - scamType: type of phishing if detected (e.g., "email-phishing", "smishing", "spear-phishing", "clone-phishing")
         - recommendations: what the user should do`,
       
       "deepfake": `You are an AI that helps identify potential fake profiles and deepfake content.
