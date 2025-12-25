@@ -89,10 +89,6 @@ export const Navbar = () => {
                 <Moon className="w-5 h-5" />
               )}
             </Button>
-
-            <Button variant="cyber" size="lg">
-              {t("getStarted")}
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -149,9 +145,6 @@ export const Navbar = () => {
                   </Link>
                 );
               })}
-              <Button variant="cyber" className="mt-2">
-                {t("getStarted")}
-              </Button>
             </div>
           </motion.div>
         )}
