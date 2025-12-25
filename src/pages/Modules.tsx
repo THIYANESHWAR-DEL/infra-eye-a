@@ -11,31 +11,45 @@ import {
   GraduationCap,
   ChevronRight,
   Scan,
-  Sparkles
+  Sparkles,
+  Phone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScamCallScanner } from "@/components/modules/ScamCallScanner";
+import { PhishingScanner } from "@/components/modules/PhishingScanner";
 import { AIScanner } from "@/components/modules/AIScanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const modules = [
   {
-    id: "app-security",
+    id: "scam-detection",
     icon: ShieldCheck,
     title: { en: "Scam Detection", ta: "மோசடி கண்டறிதல்", hi: "स्कैम पहचान" },
     description: { en: "Detect and prevent online scams in real-time", ta: "நிகழ்நேரத்தில் ஆன்லைன் மோசடிகளைக் கண்டறிந்து தடுக்கவும்", hi: "रियल-टाइम में ऑनलाइन स्कैम का पता लगाएं और रोकें" },
     gradient: "from-emerald-400 via-teal-500 to-cyan-500",
     features: ["Real-time Detection", "AI Analysis", "Risk Scoring", "Prevention Tips"],
     placeholder: "Describe the suspicious message, email, or activity you want to analyze...",
+    scanType: "app-security",
   },
   {
-    id: "scam-detector",
+    id: "scam-call",
+    icon: Phone,
+    title: { en: "Scam Call Detection", ta: "மோசடி அழைப்பு கண்டறிதல்", hi: "स्कैम कॉल पहचान" },
+    description: { en: "Detect fraudulent phone calls and voice scams", ta: "மோசடி தொலைபேசி அழைப்புகள் மற்றும் குரல் மோசடிகளைக் கண்டறியவும்", hi: "धोखाधड़ी वाले फोन कॉल और वॉइस स्कैम का पता लगाएं" },
+    gradient: "from-rose-400 via-pink-500 to-red-500",
+    features: ["Voice Analysis", "Call Transcript", "Real-time Detection", "Vishing Alert"],
+    placeholder: "",
+    scanType: "scam-call",
+  },
+  {
+    id: "phishing",
     icon: MailWarning,
     title: { en: "Phishing Detection", ta: "ஃபிஷிங் கண்டறிதல்", hi: "फ़िशिंग पहचान" },
     description: { en: "Identify phishing emails and fake websites", ta: "ஃபிஷிங் மின்னஞ்சல்கள் மற்றும் போலி இணையதளங்களைக் கண்டறியவும்", hi: "फ़िशिंग ईमेल और नकली वेबसाइटों की पहचान करें" },
     gradient: "from-purple-400 via-violet-500 to-indigo-500",
-    features: ["Email Scanning", "URL Verification", "Voice Analysis", "SMS Screening"],
+    features: ["Email Scanning", "URL Verification", "Link Analysis", "SMS Screening"],
     placeholder: "",
+    scanType: "phishing",
   },
   {
     id: "deepfake",
@@ -45,6 +59,7 @@ const modules = [
     gradient: "from-orange-400 via-rose-500 to-pink-500",
     features: ["Image Analysis", "Video Verification", "Profile Check", "AI Detection"],
     placeholder: "Describe the profile or content you want to verify...",
+    scanType: "deepfake",
   },
   {
     id: "network",
@@ -54,6 +69,7 @@ const modules = [
     gradient: "from-green-400 via-emerald-500 to-teal-500",
     features: ["Traffic Analysis", "Anomaly Detection", "Threat Mapping", "Real-time Alerts"],
     placeholder: "Paste network logs or describe suspicious network activity...",
+    scanType: "network",
   },
   {
     id: "dark-web",
@@ -63,6 +79,7 @@ const modules = [
     gradient: "from-slate-400 via-zinc-500 to-gray-600",
     features: ["Threat Education", "Safety Tips", "Data Protection", "Privacy Guide"],
     placeholder: "Ask about dark web threats or cybersecurity topics...",
+    scanType: "dark-web",
   },
   {
     id: "learning",
@@ -73,6 +90,7 @@ const modules = [
     features: ["Video Lessons", "Quizzes", "Certifications", "Progress Tracking"],
     placeholder: "What topic would you like to learn about?",
     linkTo: "/awareness",
+    scanType: "",
   },
 ];
 
@@ -98,7 +116,7 @@ const Modules = () => {
   return (
     <>
       <Helmet>
-        <title>{language === "ta" ? "பாதுகாப்பு தொகுதிகள் - சைபர்சுரக்ஷா AI" : "Security Modules - CyberSuraksha AI"}</title>
+        <title>{language === "ta" ? "பாதுகாப்பு தொகுதிகள் - சைபர்சுரக்ஷா AI" : language === "hi" ? "सुरक्षा मॉड्यूल - साइबरसुरक्षा AI" : "Security Modules - CyberSuraksha AI"}</title>
         <meta name="description" content="Access AI-powered security modules for scam detection, phishing identification, and network analysis." />
       </Helmet>
       <div className="min-h-screen bg-background">
@@ -118,17 +136,19 @@ const Modules = () => {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4"
               >
                 <Sparkles className="w-4 h-4" />
-                {language === "ta" ? "AI இயக்கப்பட்ட பாதுகாப்பு" : "AI-Powered Security"}
+                {language === "ta" ? "AI இயக்கப்பட்ட பாதுகாப்பு" : language === "hi" ? "AI-संचालित सुरक्षा" : "AI-Powered Security"}
               </motion.div>
               <h1 className="font-display text-3xl md:text-4xl font-bold mb-4">
-                {language === "ta" ? "பாதுகாப்பு" : "Security"}{" "}
+                {language === "ta" ? "பாதுகாப்பு" : language === "hi" ? "सुरक्षा" : "Security"}{" "}
                 <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  {language === "ta" ? "தொகுதிகள்" : "Modules"}
+                  {language === "ta" ? "தொகுதிகள்" : language === "hi" ? "मॉड्यूल" : "Modules"}
                 </span>
               </h1>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 {language === "ta" 
                   ? "உண்மையான AI மூலம் உங்கள் டிஜிட்டல் பாதுகாப்பின் பல்வேறு அம்சங்களை ஸ்கேன் செய்து பகுப்பாய்வு செய்யுங்கள்"
+                  : language === "hi"
+                  ? "वास्तविक AI के साथ अपनी डिजिटल सुरक्षा के विभिन्न पहलुओं को स्कैन और विश्लेषण करें"
                   : "Scan and analyze different aspects of your digital security with real AI"
                 }
               </p>
@@ -218,7 +238,7 @@ const Modules = () => {
                       onClick={() => handleScan(module.id)}
                     >
                       <Scan className="w-4 h-4" />
-                      {language === "ta" ? "AI ஸ்கேன் தொடங்கு" : "Start AI Scan"}
+                      {language === "ta" ? "AI ஸ்கேன் தொடங்கு" : language === "hi" ? "AI स्कैन शुरू करें" : "Start AI Scan"}
                       <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   </div>
@@ -235,14 +255,19 @@ const Modules = () => {
             </div>
 
             {/* Scam Call Scanner (with voice) */}
-            {activeModule === "scam-detector" && (
+            {activeModule === "scam-call" && (
               <ScamCallScanner onClose={resetScan} />
             )}
 
+            {/* Phishing Scanner */}
+            {activeModule === "phishing" && (
+              <PhishingScanner onClose={resetScan} />
+            )}
+
             {/* Generic AI Scanner for other modules */}
-            {activeModule && activeModule !== "scam-detector" && activeModuleData && (
+            {activeModule && activeModule !== "scam-call" && activeModule !== "phishing" && activeModuleData && (
               <AIScanner
-                moduleId={activeModuleData.id}
+                moduleId={activeModuleData.scanType}
                 moduleTitle={activeModuleData.title[language]}
                 moduleColor={activeModuleData.gradient}
                 icon={activeModuleData.icon}
