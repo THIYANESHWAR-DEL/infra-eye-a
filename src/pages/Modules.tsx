@@ -68,7 +68,7 @@ const modules = [
     description: { en: "Monitor and visualize network security", ta: "நெட்வொர்க் பாதுகாப்பைக் கண்காணித்து காட்சிப்படுத்தவும்", hi: "नेटवर्क सुरक्षा की निगरानी और दृश्य करें" },
     gradient: "from-green-400 via-emerald-500 to-teal-500",
     features: ["Traffic Analysis", "Anomaly Detection", "Threat Mapping", "Real-time Alerts"],
-    placeholder: "Paste network logs or describe suspicious network activity...",
+    placeholder: `Example: "My router logs show repeated connection attempts from IP 185.234.72.xx to port 22 (SSH) every 30 seconds. Also noticing unusual outbound traffic to unknown servers in Eastern Europe around 3 AM daily. Device MAC address: AA:BB:CC:11:22:33 is consuming 5GB data overnight when all devices should be idle."`,
     scanType: "network",
   },
   {
@@ -78,7 +78,7 @@ const modules = [
     description: { en: "Learn about dark web threats and protection", ta: "டார்க் வெப் அச்சுறுத்தல்கள் மற்றும் பாதுகாப்பு பற்றி அறியவும்", hi: "डार्क वेब खतरों और सुरक्षा के बारे में जानें" },
     gradient: "from-slate-400 via-zinc-500 to-gray-600",
     features: ["Threat Education", "Safety Tips", "Data Protection", "Privacy Guide"],
-    placeholder: "Ask about dark web threats or cybersecurity topics...",
+    placeholder: `Example: "I received an email claiming my credentials were found on the dark web. Email: john.doe@gmail.com, allegedly from a data breach. The sender demands $500 in Bitcoin or they'll release my 'private data'. They mentioned my old password 'Summer2019!' which I used years ago. Is this real? What should I do?"`,
     scanType: "dark-web",
   },
   {
