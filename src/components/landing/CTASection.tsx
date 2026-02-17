@@ -82,7 +82,7 @@ export const CTASection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/dashboard">
+              <Link to="/auth">
                 <Button 
                   size="xl" 
                   className="bg-white text-primary hover:bg-white/90 shadow-xl shadow-black/20 group"
