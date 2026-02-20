@@ -8,7 +8,7 @@ import {
   ScanFace, 
   Activity, 
   EyeOff,
-  GraduationCap,
+  
   ChevronRight,
   Scan,
   Sparkles,
@@ -81,17 +81,6 @@ const modules = [
     placeholder: `Example: "I received an email claiming my credentials were found on the dark web. Email: john.doe@gmail.com, allegedly from a data breach. The sender demands $500 in Bitcoin or they'll release my 'private data'. They mentioned my old password 'Summer2019!' which I used years ago. Is this real? What should I do?"`,
     scanType: "dark-web",
   },
-  {
-    id: "learning",
-    icon: GraduationCap,
-    title: { en: "Cyber Learning Hub", ta: "சைபர் கற்றல் மையம்", hi: "साइबर लर्निंग हब" },
-    description: { en: "Interactive lessons for digital safety", ta: "டிஜிட்டல் பாதுகாப்புக்கான ஊடாடும் பாடங்கள்", hi: "डिजिटल सुरक्षा के लिए इंटरैक्टिव पाठ" },
-    gradient: "from-amber-400 via-yellow-500 to-orange-500",
-    features: ["Video Lessons", "Quizzes", "Certifications", "Progress Tracking"],
-    placeholder: "What topic would you like to learn about?",
-    linkTo: "/awareness",
-    scanType: "",
-  },
 ];
 
 const Modules = () => {
@@ -99,11 +88,6 @@ const Modules = () => {
   const { language } = useLanguage();
 
   const handleScan = (moduleId: string) => {
-    const module = modules.find(m => m.id === moduleId);
-    if (module?.linkTo) {
-      window.location.href = module.linkTo;
-      return;
-    }
     setActiveModule(moduleId);
   };
 
