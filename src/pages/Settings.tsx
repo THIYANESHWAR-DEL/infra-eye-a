@@ -264,46 +264,6 @@ const Settings = () => {
                 </Card>
               </motion.div>
 
-              {/* Profile Settings */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Card className="overflow-hidden border-border/50 bg-card/70 backdrop-blur-xl">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
-                        <User className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">{language === "ta" ? "சுயவிவரம்" : "Profile"}</CardTitle>
-                        <CardDescription>{language === "ta" ? "உங்கள் சுயவிவரத்தை புதுப்பிக்கவும்" : "Update your profile"}</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl font-bold text-primary-foreground">
-                        {profile.name.charAt(0)}
-                      </div>
-                      <div className="flex-1">
-                        <Label htmlFor="name">{language === "ta" ? "பெயர்" : "Display Name"}</Label>
-                        <Input 
-                          id="name"
-                          value={profile.name}
-                          onChange={(e) => setProfile({...profile, name: e.target.value})}
-                          className="mt-1"
-                        />
-                      </div>
-                    </div>
-                    <Button onClick={handleSaveProfile} className="w-full">
-                      {language === "ta" ? "சேமி" : "Save Profile"}
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
             </div>
           </div>
         </main>
