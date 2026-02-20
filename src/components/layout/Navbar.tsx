@@ -20,7 +20,7 @@ export const Navbar = () => {
   const navLinks = [
     { href: "/dashboard", label: t("dashboard"), icon: BarChart3 },
     { href: "/modules", label: t("modules"), icon: Boxes },
-    { href: "/awareness", label: t("learn"), icon: BookMarked },
+    
     { href: "/reports", label: t("reports"), icon: FileBarChart },
     { href: "/settings", label: language === "ta" ? "அமைப்புகள்" : "Settings", icon: Settings },
   ];
