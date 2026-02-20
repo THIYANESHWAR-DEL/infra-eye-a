@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { scanType, content, fileName } = await req.json();
+    const { scanType, content, fileName, imageBase64 } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -61,13 +61,21 @@ serve(async (req) => {
         - scamType: type of phishing if detected (e.g., "email-phishing", "smishing", "spear-phishing", "clone-phishing")
         - recommendations: what the user should do`,
       
-      "deepfake": `You are an AI that helps identify potential fake profiles and deepfake content.
-        Analyze the provided content description for authenticity indicators. Return a JSON response with:
-        - status: "safe" | "warning" | "danger"
-        - score: number 0-100 (100 = likely authentic)
-        - issues: array of suspicious elements
-        - explanation: why this content may or may not be authentic
-        - recommendations: steps to verify authenticity`,
+      "deepfake": `You are an expert AI forensic analyst specialized in detecting deepfakes, AI-generated images, and manipulated media.
+        Analyze the provided image carefully for deepfake indicators including:
+        - Facial asymmetry, unnatural skin texture, or blurring around face edges
+        - Inconsistent lighting, shadows, or reflections
+        - Artifacts around hair, ears, teeth, or eyes
+        - Background distortions or warping
+        - Unnatural color gradients or pixel patterns
+        - Signs of GAN-generated content (checkerboard artifacts)
+        - Metadata inconsistencies
+        Return a JSON response with:
+        - status: "safe" (likely authentic) | "warning" (possibly manipulated) | "danger" (likely deepfake/AI-generated)
+        - score: number 0-100 (100 = very likely authentic, 0 = clearly fake)
+        - issues: array of specific deepfake indicators found
+        - explanation: detailed forensic explanation of why the image is authentic or fake
+        - recommendations: steps to further verify authenticity`,
       
       "network": `You are a network security AI that analyzes traffic patterns and anomalies.
         Analyze the provided network data for suspicious activities. Return a JSON response with:
@@ -88,6 +96,25 @@ serve(async (req) => {
 
     const systemPrompt = systemPrompts[scanType] || systemPrompts["app-security"];
 
+    // Build messages - support image input for deepfake
+    const userContent: any[] = [];
+    
+    if (imageBase64 && scanType === "deepfake") {
+      userContent.push({
+        type: "image_url",
+        image_url: { url: `data:image/png;base64,${imageBase64}` },
+      });
+      userContent.push({
+        type: "text",
+        text: `Analyze this image for deepfake indicators. Is this image authentic or AI-generated/manipulated? ${content || ""}`,
+      });
+    } else {
+      userContent.push({
+        type: "text",
+        text: `Analyze the following ${scanType === "scam-detector" ? "call transcript/message" : "content"}: ${content}${fileName ? ` (File: ${fileName})` : ""}`,
+      });
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -95,13 +122,10 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: scanType === "deepfake" && imageBase64 ? "google/gemini-2.5-flash" : "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
-          { 
-            role: "user", 
-            content: `Analyze the following ${scanType === "scam-detector" ? "call transcript/message" : "content"}: ${content}${fileName ? ` (File: ${fileName})` : ""}`
-          }
+          { role: "user", content: userContent }
         ],
         response_format: { type: "json_object" },
       }),

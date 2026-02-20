@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { ScamCallScanner } from "@/components/modules/ScamCallScanner";
 import { PhishingScanner } from "@/components/modules/PhishingScanner";
 import { AIScanner } from "@/components/modules/AIScanner";
+import { DeepfakeScanner } from "@/components/modules/DeepfakeScanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const modules = [
@@ -248,8 +249,13 @@ const Modules = () => {
               <PhishingScanner onClose={resetScan} />
             )}
 
+            {/* Deepfake Scanner (with image upload) */}
+            {activeModule === "deepfake" && (
+              <DeepfakeScanner onClose={resetScan} />
+            )}
+
             {/* Generic AI Scanner for other modules */}
-            {activeModule && activeModule !== "scam-call" && activeModule !== "phishing" && activeModuleData && (
+            {activeModule && activeModule !== "scam-call" && activeModule !== "phishing" && activeModule !== "deepfake" && activeModuleData && (
               <AIScanner
                 moduleId={activeModuleData.scanType}
                 moduleTitle={activeModuleData.title[language]}
