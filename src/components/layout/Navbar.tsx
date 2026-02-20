@@ -66,7 +66,7 @@ export const Navbar = () => {
 
           {/* Controls */}
           <div className="hidden md:flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setLanguage(language === "en" ? "ta" : "en")} className="relative">
+            <Button variant="ghost" size="icon" onClick={() => setLanguage(language === "en" ? "ta" : language === "ta" ? "hi" : "en")} className="relative">
               <Languages className="w-5 h-5" />
               <span className="absolute -bottom-1 -right-1 text-[10px] font-bold bg-primary text-primary-foreground rounded px-1">
                 {language.toUpperCase()}
@@ -117,7 +117,7 @@ export const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setLanguage(language === "en" ? "ta" : "en")}>
+            <Button variant="ghost" size="icon" onClick={() => setLanguage(language === "en" ? "ta" : language === "ta" ? "hi" : "en")}>
               <Languages className="w-5 h-5" />
             </Button>
             <Button variant="ghost" size="icon" onClick={toggleTheme}>
