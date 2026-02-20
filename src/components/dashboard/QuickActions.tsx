@@ -4,7 +4,6 @@ import {
   PhoneCall, 
   UserSearch, 
   Signal, 
-  BookOpen,
   ClipboardList 
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -18,7 +17,7 @@ export const QuickActions = () => {
     { icon: PhoneCall, labelKey: "checkCall", color: "from-purple-500 to-pink-500", href: "/modules" },
     { icon: UserSearch, labelKey: "detectFake", color: "from-orange-500 to-red-500", href: "/modules" },
     { icon: Signal, labelKey: "network", color: "from-green-500 to-emerald-500", href: "/modules" },
-    { icon: BookOpen, labelKey: "learn", color: "from-indigo-500 to-violet-500", href: "/awareness" },
+    
     { icon: ClipboardList, labelKey: "reports", color: "from-amber-500 to-orange-500", href: "/reports" },
   ];
 
